@@ -85,6 +85,7 @@ pub enum RaycastSystem<T> {
     UpdateRaycast,
     UpdateIntersections,
     UpdateDebugCursor,
+    #[system_label(ignore_fields)]
     _Phantom(PhantomData<fn() -> T>),
 }
 impl<T> PartialEq for RaycastSystem<T> {
@@ -419,7 +420,7 @@ pub fn update_raycast<T: 'static>(
                     |(visibility, comp_visibility, bound_vol, transform, entity)| {
                         let should_raycast =
                             if let RayCastMethod::Screenspace(_) = pick_source.cast_method {
-                                visibility.is_visible && comp_visibility.is_visible
+                                visibility.is_visible && comp_visibility.is_visible()
                             } else {
                                 visibility.is_visible
                             };
